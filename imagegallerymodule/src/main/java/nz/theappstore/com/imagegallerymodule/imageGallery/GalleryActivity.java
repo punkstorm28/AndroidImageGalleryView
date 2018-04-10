@@ -1,4 +1,4 @@
-package com.chikeandroid.tutsplus_glide;
+package nz.theappstore.com.imagegallerymodule.imageGallery;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +13,22 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import nz.theappstore.com.imagegallerymodule.R;
+import nz.theappstore.com.imagegallerymodule.rxBus.PhotoUrlListBus;
+import nz.theappstore.com.imagegallerymodule.rxBus.utils.PhotoEntity;
+import rx.Observer;
+
 /**
  * Created by Chike on 2/12/2017.
  */
 
-public class SpaceGalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends AppCompatActivity {
+
+    ArrayList<PhotoEntity> datasetForGallery = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +40,26 @@ public class SpaceGalleryActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        SpaceGalleryActivity.ImageGalleryAdapter adapter = new SpaceGalleryActivity.ImageGalleryAdapter(this, SpacePhoto.getSpacePhotos());
+        final GalleryActivity.ImageGalleryAdapter adapter = new GalleryActivity.ImageGalleryAdapter(this, datasetForGallery);
+
+        PhotoUrlListBus.getSpacePhotoObservable().subscribe(new Observer<List<PhotoEntity>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(List<PhotoEntity> photoEntities) {
+                datasetForGallery.addAll(photoEntities);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         recyclerView.setAdapter(adapter);
 
     }
@@ -52,18 +82,18 @@ public class SpaceGalleryActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(ImageGalleryAdapter.MyViewHolder holder, int position) {
 
-            SpacePhoto spacePhoto = mSpacePhotos[position];
+            PhotoEntity photoEntity = mPhotoEntities.get(position);
             ImageView imageView = holder.mPhotoImageView;
 
             Glide.with(mContext)
-                    .load(spacePhoto.getUrl())
+                    .load(photoEntity.getUrl())
                     .placeholder(R.drawable.ic_cloud_off_red)
                     .into(imageView);
         }
 
         @Override
         public int getItemCount() {
-            return (mSpacePhotos.length);
+            return (mPhotoEntities.size());
         }
 
         public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -82,21 +112,21 @@ public class SpaceGalleryActivity extends AppCompatActivity {
 
                 int position = getAdapterPosition();
                 if(position != RecyclerView.NO_POSITION) {
-                    SpacePhoto spacePhoto = mSpacePhotos[position];
+                    PhotoEntity photoEntity = mPhotoEntities.get(position);
 
-                    Intent intent = new Intent(mContext, SpacePhotoActivity.class);
-                    intent.putExtra(SpacePhotoActivity.EXTRA_SPACE_PHOTO, spacePhoto);
+                    Intent intent = new Intent(mContext, PhotoDetailActivity.class);
+                    intent.putExtra(PhotoDetailActivity.EXTRA_SPACE_PHOTO, photoEntity);
                     startActivity(intent);
                 }
             }
         }
 
-        private SpacePhoto[] mSpacePhotos;
+        private ArrayList<PhotoEntity> mPhotoEntities;
         private Context mContext;
 
-        public ImageGalleryAdapter(Context context, SpacePhoto[] spacePhotos) {
+        public ImageGalleryAdapter(Context context, ArrayList<PhotoEntity> photoEntities) {
             mContext = context;
-            mSpacePhotos = spacePhotos;
+            mPhotoEntities = photoEntities;
         }
     }
 }

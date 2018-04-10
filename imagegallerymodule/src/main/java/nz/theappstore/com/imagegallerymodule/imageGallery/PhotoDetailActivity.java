@@ -1,4 +1,4 @@
-package com.chikeandroid.tutsplus_glide;
+package nz.theappstore.com.imagegallerymodule.imageGallery;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -13,13 +13,17 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import nz.theappstore.com.imagegallerymodule.R;
+import nz.theappstore.com.imagegallerymodule.rxBus.utils.PhotoEntity;
+
+
 /**
  * Created by Chike on 2/12/2017.
  */
 
-public class SpacePhotoActivity extends AppCompatActivity {
+public class PhotoDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SPACE_PHOTO = "SpacePhotoActivity.SPACE_PHOTO";
+    public static final String EXTRA_SPACE_PHOTO = "PhotoDetailActivity.SPACE_PHOTO";
 
     private ImageView mImageView;
 
@@ -28,11 +32,11 @@ public class SpacePhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detail);
 
-        mImageView = (ImageView) findViewById(R.id.image);
-        SpacePhoto spacePhoto = getIntent().getParcelableExtra(EXTRA_SPACE_PHOTO);
+        mImageView = findViewById(R.id.image);
+        PhotoEntity photoEntity = getIntent().getParcelableExtra(EXTRA_SPACE_PHOTO);
 
         Glide.with(this)
-                .load(spacePhoto.getUrl())
+                .load(photoEntity.getUrl())
                 .asBitmap()
                 .error(R.drawable.ic_cloud_off_red)
                 .listener(new RequestListener<String, Bitmap>() {
@@ -63,20 +67,4 @@ public class SpacePhotoActivity extends AppCompatActivity {
 
     }
 
-   /* private SimpleTarget target = new SimpleTarget<Bitmap>() {
-
-        @Override
-        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
-
-           onPalette(Palette.from(bitmap).generate());
-           mImageView.setImageBitmap(bitmap);
-        }
-
-        public void onPalette(Palette palette) {
-            if (null != palette) {
-                ViewGroup parent = (ViewGroup) mImageView.getParent().getParent();
-                parent.setBackgroundColor(palette.getDarkVibrantColor(Color.GRAY));
-            }
-        }
-    };*/
 }
