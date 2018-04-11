@@ -18,8 +18,6 @@ public class ButtonsFragment extends Fragment {
     public static final int TAKE_PHOTO_PANEL = 0;
     public static final int MANAGE_PHOTO_PANEL = 1;
 
-    private ViewSwitcher switcher;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,23 +33,13 @@ public class ButtonsFragment extends Fragment {
     }
 
     void setupReactiveListeners(View view) {
-        switcher = view.findViewById(R.id.buttons_switcher);
-        FloatingActionButton takePhotoButton = switcher.findViewById(R.id.takePhotoButton);
-        FloatingActionButton discardPhotoButton = switcher.findViewById(R.id.discardImageButton);
-        FloatingActionButton uploadImageButton = switcher.findViewById(R.id.uploadImageButton);
-        takePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ButtonFragmentEventsLive.setPhotoClickButtonEvent(view);
-                switchView(1);
-            }
-        });
+        FloatingActionButton discardPhotoButton = view.findViewById(R.id.discardImageButton);
+        FloatingActionButton uploadImageButton = view.findViewById(R.id.uploadImageButton);
 
         discardPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ButtonFragmentEventsLive.setDiscardPhotoButtonEvent(view);
-                switchView(0);
             }
         });
 
@@ -59,14 +47,10 @@ public class ButtonsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ButtonFragmentEventsLive.setUploadButtonEvent(view);
-                switchView(0);
                 Toast.makeText(getContext(), "Uploading Image...", Toast.LENGTH_SHORT).show();
             }
         });
     }
     //buttonsImageScreen
 
-    void switchView(int child) {
-        switcher.setDisplayedChild(child);
-    }
 }

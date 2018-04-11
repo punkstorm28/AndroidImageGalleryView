@@ -6,22 +6,27 @@ import android.util.Log;
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
 
+import java.io.File;
+
 public class ImageUploader {
 
     final String uploadUrl;
     final String filePath;
-    ImageUploader(String uploadUrl, String filePath) {
+    public ImageUploader(String uploadUrl, String filePath) {
         this.filePath = filePath;
         this.uploadUrl = uploadUrl;
     }
 
     public String uploadMultipart(final Context context) {
         try {
-            return new MultipartUploadRequest(context, uploadUrl)
+            File file = new File(filePath);
+            Log.i("FILE_UPLOAD", "exists = "+file.exists()+ " size= "+file.length());
+            return new MultipartUploadRequest(context, uploadUrl) {}
                             // starting from 3.1+, you can also use content:// URI string instead of absolute file
                             .addFileToUpload(filePath, "file")
                             .setNotificationConfig(new UploadNotificationConfig())
                             .setMaxRetries(2)
+                            .setBasicAuth("Ram","Crimson")
                             .startUpload();
         } catch (Exception exc) {
             Log.e("AndroidUploadService", exc.getMessage(), exc);
