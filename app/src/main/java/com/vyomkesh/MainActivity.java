@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         photoEntities.add(new PhotoEntity("http://i.imgur.com/3wQcZeY.jpg", "Satellite"));
 
         PhotoUrlListBus.setPhotoList(photoEntities);
-        Button showGalleryBtn = (Button) findViewById(R.id.btn_show_gallery);
+        Button showGalleryBtn = findViewById(R.id.btn_show_gallery);
         showGalleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button showGif = (Button) findViewById(R.id.camera_button);
+        Button showGif = findViewById(R.id.camera_button);
         showGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
